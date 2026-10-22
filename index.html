@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Customer Relationship Management System</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<!-- ================= HTML: the structure of the page ================= -->
+<body>
+
+<header>
+  <h1>Customer Relationship Management</h1>
+  <p>Add, search, edit and delete your customers in one place.</p>
+</header>
+
+<main>
+
+  <!-- Summary numbers -->
+  <section class="stats">
+    <div class="stat"><strong id="totalCount">0</strong><span>Total customers</span></div>
+    <div class="stat"><strong id="leadCount">0</strong><span>Leads</span></div>
+    <div class="stat"><strong id="activeCount">0</strong><span>Active</span></div>
+    <div class="stat"><strong id="inactiveCount">0</strong><span>Inactive</span></div>
+  </section>
+
+  <!-- Add / edit form -->
+  <section class="card">
+    <h2 id="formTitle">Add a customer</h2>
+    <div class="form-grid">
+      <div><label for="name">Name</label><input id="name" type="text" placeholder="Asha Patil"></div>
+      <div><label for="email">Email</label><input id="email" type="email" placeholder="asha@example.com"></div>
+      <div><label for="phone">Phone</label><input id="phone" type="text" placeholder="9876543210"></div>
+      <div><label for="company">Company</label><input id="company" type="text" placeholder="Patil Traders"></div>
+      <div>
+        <label for="status">Status</label>
+        <select id="status">
+          <option>Lead</option>
+          <option>Active</option>
+          <option>Inactive</option>
+        </select>
+      </div>
+    </div>
+    <p id="message" style="color: var(--red); font-size: 13px; min-height: 18px; margin: 10px 0 0;"></p>
+    <div class="form-buttons">
+      <button id="saveBtn" onclick="saveCustomer()">Save customer</button>
+      <button class="secondary" onclick="clearForm()">Clear form</button>
+    </div>
+  </section>
+
+  <!-- Customer list -->
+  <section class="card">
+    <h2>Customer list</h2>
+    <div class="search">
+      <input id="searchBox" type="text" placeholder="Search by name, email or company" oninput="showCustomers()">
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Email</th><th>Phone</th><th>Company</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="customerTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- JavaScript file -->
+<script src="script.js"></script>
+
+</body>
+</html>
