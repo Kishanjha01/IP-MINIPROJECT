@@ -71,10 +71,12 @@
       document.getElementById("message").textContent = "Please enter at least a name and an email.";
       return;
     }
-    if (email.indexOf("@") === -1) {
-      document.getElementById("message").textContent = "Please enter a valid email address.";
-      return;
+    
+    if (!email.includes("@") || !email.includes(".")) {
+     document.getElementById("message").textContent = "Please enter a valid email.";
+     return;
     }
+
 
     if (editingId === null) {
       // Add a new customer
