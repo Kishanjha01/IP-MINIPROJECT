@@ -22,10 +22,13 @@
 
   /* Top bar */
   header {
-    background: var(--blue);
+    background: linear-gradient(135deg, var(--blue), var(--dark-blue));
     color: var(--white);
-    padding: 18px 24px;
-  }
+    padding: 22px 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+ 
   header h1 { margin: 0; font-size: 22px; }
   header p { margin: 4px 0 0; font-size: 14px; opacity: 0.85; }
 
@@ -117,3 +120,64 @@ footer {
 footer p {
   margin: 0;
 }
+
+/* Improved customer list toolbar */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.list-header h2 {
+    margin: 0;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.toolbar input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+}
+
+.toolbar select {
+    flex: 0 0 190px;
+    width: 190px;
+}
+
+@media (max-width: 600px) {
+    .list-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .toolbar input,
+    .toolbar select {
+        width: 100%;
+        flex: auto;
+    }
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
+main {
+    width: 100%;
+}
+

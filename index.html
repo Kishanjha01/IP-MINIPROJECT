@@ -52,20 +52,47 @@
 
   <!-- Customer list -->
   <section class="card">
-    <h2>Customer list</h2>
-    <div class="search">
-      <input id="searchBox" type="text" placeholder="Search by name, email or company" oninput="showCustomers()">
+
+    <div class="list-header">
+      <h2>Customer list</h2>
+
+      <button type="button" onclick="exportCustomers()">
+        Export CSV ↓
+      </button>
     </div>
+
+    <div class="toolbar">
+      <input
+        id="searchBox"
+        type="text"
+        placeholder="Search by name, email or company"
+        oninput="showCustomers()"
+      >
+
+      <select id="statusFilter" onchange="showCustomers()">
+        <option value="All">All statuses</option>
+        <option value="Lead">Leads</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+    </div>
+
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Name</th><th>Email</th><th>Phone</th><th>Company</th><th>Status</th><th>Actions</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Company</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="customerTable"></tbody>
       </table>
     </div>
+
   </section>
 
 </main>

@@ -11,39 +11,45 @@
   // 2. Show the customers in the table
   function showCustomers() {
     var search = document.getElementById("searchBox").value.toLowerCase();
+    var statusFilter = document.getElementById("statusFilter").value;
     var table = document.getElementById("customerTable");
     var rows = "";
 
     for (var i = 0; i < customers.length; i++) {
-      var c = customers[i];
+        var c = customers[i];
 
-      // Check if the search words match this customer
-      var text = (c.name + " " + c.email + " " + c.company).toLowerCase();
-      if (text.indexOf(search) === -1) {
-        continue; // skip customers that do not match
-      }
+        // Check whether the customer matches the search
+        var text = (c.name + " " + c.email + " " + c.company).toLowerCase();
 
-      rows += "<tr>" +
-        "<td>" + c.name + "</td>" +
-        "<td>" + c.email + "</td>" +
-        "<td>" + c.phone + "</td>" +
-        "<td>" + c.company + "</td>" +
-        "<td><span class='badge " + c.status + "'>" + c.status + "</span></td>" +
-        "<td>" +
-          "<button class='edit' onclick='editCustomer(" + c.id + ")'>Edit</button> " +
-          "<button class='delete' onclick='deleteCustomer(" + c.id + ")'>Delete</button>" +
-        "</td>" +
-      "</tr>";
+        // Check both search text and selected status
+        if (
+            text.indexOf(search) === -1 ||
+            (statusFilter !== "All" && c.status !== statusFilter)
+        ) {
+            continue;
+        }
+
+        rows += "<tr>" +
+            "<td>" + c.name + "</td>" +
+            "<td>" + c.email + "</td>" +
+            "<td>" + c.phone + "</td>" +
+            "<td>" + c.company + "</td>" +
+            "<td><span class='badge " + c.status + "'>" + c.status + "</span></td>" +
+            "<td>" +
+                "<button class='edit' onclick='editCustomer(" + c.id + ")'>Edit</button> " +
+                "<button class='delete' onclick='deleteCustomer(" + c.id + ")'>Delete</button>" +
+            "</td>" +
+        "</tr>";
     }
 
     if (rows === "") {
-      rows = "<tr><td colspan='6' class='empty'>No customers found. Add one using the form above.</td></tr>";
+        rows = "<tr><td colspan='6' class='empty'>No customers found. Add one using the form above.</td></tr>";
     }
 
     table.innerHTML = rows;
     updateStats();
-  }
-
+}
+  
   // 3. Update the four summary boxes at the top
   function updateStats() {
     var leads = 0, active = 0, inactive = 0;
@@ -146,3 +152,47 @@
 
   // 8. Show the table when the page opens
   showCustomers();
+
+  // 9. Export customer records to a CSV file
+function exportCustomers() {
+    if (customers.length === 0) {
+        alert("There are no customers to export.");
+        return;
+    }
+
+    var headers = ["ID", "Name", "Email", "Phone", "Company", "Status"];
+
+    var rows = customers.map(function(c) {
+        return [
+            c.id,
+            c.name,
+            c.email,
+            c.phone,
+            c.company,
+            c.status
+        ];
+    });
+
+    function escapeCSV(value) {
+        return '"' + String(value ?? "").replace(/"/g, '""') + '"';
+    }
+
+    var csv = [headers, ...rows]
+        .map(function(row) {
+            return row.map(escapeCSV).join(",");
+        })
+        .join("\r\n");
+
+    var blob = new Blob(["\uFEFF" + csv], {
+        type: "text/csv;charset=utf-8;"
+    });
+
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+
+    link.href = url;
+    link.download = "customers.csv";
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
