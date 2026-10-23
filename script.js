@@ -1,15 +1,33 @@
-  // 1. A list (array) that stores all customers
-  var customers = [
+
+// 1. Sample customer data
+var sampleCustomers = [
     { id: 1, name: "Asha Patil", email: "asha@example.com", phone: "9876543210", company: "Patil Traders", status: "Active" },
     { id: 2, name: "Rahul Jadhav", email: "rahul@example.com", phone: "9123456780", company: "Jadhav Foods", status: "Lead" },
     { id: 3, name: "Sneha Kulkarni", email: "sneha@example.com", phone: "9988776655", company: "Kulkarni Textiles", status: "Inactive" }
-  ];
+];
 
-  var nextId = 4;        // the id given to the next new customer
-  var editingId = null;  // remembers which customer we are editing (null = adding new)
+// 2. Load saved customers from Local Storage
+var savedCustomers = localStorage.getItem("crmCustomers");
 
-  // 2. Show the customers in the table
-  function showCustomers() {
+var customers = savedCustomers !== null
+    ? JSON.parse(savedCustomers)
+    : sampleCustomers;
+
+var nextId = customers.length > 0
+    ? Math.max(...customers.map(function(c) {
+        return c.id;
+    })) + 1
+    : 1;
+
+var editingId = null;
+
+// 3. Save customer data to Local Storage
+function saveCustomersToStorage() {
+    localStorage.setItem("crmCustomers", JSON.stringify(customers));
+}
+
+// 4. Show customers in the table
+function showCustomers() {
     var search = document.getElementById("searchBox").value.toLowerCase();
     var statusFilter = document.getElementById("statusFilter").value;
     var table = document.getElementById("customerTable");
@@ -18,10 +36,8 @@
     for (var i = 0; i < customers.length; i++) {
         var c = customers[i];
 
-        // Check whether the customer matches the search
         var text = (c.name + " " + c.email + " " + c.company).toLowerCase();
 
-        // Check both search text and selected status
         if (
             text.indexOf(search) === -1 ||
             (statusFilter !== "All" && c.status !== statusFilter)
@@ -49,96 +65,111 @@
     table.innerHTML = rows;
     updateStats();
 }
-  
-  // 3. Update the four summary boxes at the top
-  function updateStats() {
+
+// 5. Update the summary boxes
+function updateStats() {
     var leads = 0, active = 0, inactive = 0;
+
     for (var i = 0; i < customers.length; i++) {
-      if (customers[i].status === "Lead") leads++;
-      if (customers[i].status === "Active") active++;
-      if (customers[i].status === "Inactive") inactive++;
+        if (customers[i].status === "Lead") leads++;
+        if (customers[i].status === "Active") active++;
+        if (customers[i].status === "Inactive") inactive++;
     }
+
     document.getElementById("totalCount").textContent = customers.length;
     document.getElementById("leadCount").textContent = leads;
     document.getElementById("activeCount").textContent = active;
     document.getElementById("inactiveCount").textContent = inactive;
-  }
+}
 
-  // 4. Save a new customer (or save changes to an existing one)
-  function saveCustomer() {
+// 6. Add a new customer or update an existing customer
+function saveCustomer() {
     var name = document.getElementById("name").value.trim();
     var email = document.getElementById("email").value.trim();
     var phone = document.getElementById("phone").value.trim();
     var company = document.getElementById("company").value.trim();
     var status = document.getElementById("status").value;
 
-    // Simple validation
     if (name === "" || email === "") {
-      document.getElementById("message").textContent = "Please enter at least a name and an email.";
-      return;
-    }
-    
-    if (!email.includes("@") || !email.includes(".")) {
-     document.getElementById("message").textContent = "Please enter a valid email.";
-     return;
+        document.getElementById("message").textContent =
+            "Please enter at least a name and an email.";
+        return;
     }
 
+    if (!email.includes("@") || !email.includes(".")) {
+        document.getElementById("message").textContent =
+            "Please enter a valid email.";
+        return;
+    }
 
     if (editingId === null) {
-      // Add a new customer
-      customers.push({ id: nextId, name: name, email: email, phone: phone, company: company, status: status });
-      nextId++;
+        customers.push({
+            id: nextId,
+            name: name,
+            email: email,
+            phone: phone,
+            company: company,
+            status: status
+        });
+
+        nextId++;
     } else {
-      // Update the customer we are editing
-      for (var i = 0; i < customers.length; i++) {
-        if (customers[i].id === editingId) {
-          customers[i].name = name;
-          customers[i].email = email;
-          customers[i].phone = phone;
-          customers[i].company = company;
-          customers[i].status = status;
+        for (var i = 0; i < customers.length; i++) {
+            if (customers[i].id === editingId) {
+                customers[i].name = name;
+                customers[i].email = email;
+                customers[i].phone = phone;
+                customers[i].company = company;
+                customers[i].status = status;
+            }
         }
-      }
     }
 
+    saveCustomersToStorage();
     clearForm();
     showCustomers();
-  }
+}
 
-  // 5. Fill the form with a customer's details so it can be edited
-  function editCustomer(id) {
+// 7. Edit a customer's details
+function editCustomer(id) {
     for (var i = 0; i < customers.length; i++) {
-      if (customers[i].id === id) {
-        document.getElementById("name").value = customers[i].name;
-        document.getElementById("email").value = customers[i].email;
-        document.getElementById("phone").value = customers[i].phone;
-        document.getElementById("company").value = customers[i].company;
-        document.getElementById("status").value = customers[i].status;
-      }
+        if (customers[i].id === id) {
+            document.getElementById("name").value = customers[i].name;
+            document.getElementById("email").value = customers[i].email;
+            document.getElementById("phone").value = customers[i].phone;
+            document.getElementById("company").value = customers[i].company;
+            document.getElementById("status").value = customers[i].status;
+        }
     }
+
     editingId = id;
     document.getElementById("formTitle").textContent = "Edit customer";
     document.getElementById("saveBtn").textContent = "Update customer";
     document.getElementById("message").textContent = "";
+
     window.scrollTo(0, 0);
-  }
+}
 
-  // 6. Delete a customer after asking for confirmation
-  function deleteCustomer(id) {
+// 8. Delete a customer
+function deleteCustomer(id) {
     if (confirm("Delete this customer?")) {
-      var remaining = [];
-      for (var i = 0; i < customers.length; i++) {
-        if (customers[i].id !== id) {
-          remaining.push(customers[i]);
-        }
-      }
-      customers = remaining;
-      showCustomers();
-    }
-  }
+        var remaining = [];
 
-  // 7. Empty the form and go back to "add" mode
-  function clearForm() {
+        for (var i = 0; i < customers.length; i++) {
+            if (customers[i].id !== id) {
+                remaining.push(customers[i]);
+            }
+        }
+
+        customers = remaining;
+
+        saveCustomersToStorage();
+        showCustomers();
+    }
+}
+
+// 9. Clear the form
+function clearForm() {
     document.getElementById("name").value = "";
     document.getElementById("email").value = "";
     document.getElementById("phone").value = "";
@@ -147,13 +178,14 @@
     document.getElementById("message").textContent = "";
     document.getElementById("formTitle").textContent = "Add a customer";
     document.getElementById("saveBtn").textContent = "Save customer";
+
     editingId = null;
-  }
+}
 
-  // 8. Show the table when the page opens
-  showCustomers();
+// 10. Display customers when the page opens
+showCustomers();
 
-  // 9. Export customer records to a CSV file
+// 11. Export customer records to CSV
 function exportCustomers() {
     if (customers.length === 0) {
         alert("There are no customers to export.");
@@ -163,14 +195,7 @@ function exportCustomers() {
     var headers = ["ID", "Name", "Email", "Phone", "Company", "Status"];
 
     var rows = customers.map(function(c) {
-        return [
-            c.id,
-            c.name,
-            c.email,
-            c.phone,
-            c.company,
-            c.status
-        ];
+        return [c.id, c.name, c.email, c.phone, c.company, c.status];
     });
 
     function escapeCSV(value) {
