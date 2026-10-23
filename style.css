@@ -181,3 +181,73 @@ main {
     width: 100%;
 }
 
+/* Dark Mode Button */
+#themeToggle {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #263449;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 12px;
+}
+
+#themeToggle:hover {
+    opacity: 0.85;
+}
+
+/* Dark Mode Theme */
+body.dark-mode {
+    background: #111827;
+    color: #f9fafb;
+}
+
+body.dark-mode header,
+body.dark-mode footer {
+    background: #1f2937;
+    color: #f9fafb;
+}
+
+body.dark-mode .card,
+body.dark-mode .stat {
+    background: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode p,
+body.dark-mode label,
+body.dark-mode span {
+    color: #f9fafb;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background: #374151;
+    color: #ffffff;
+    border-color: #4b5563;
+}
+
+body.dark-mode table {
+    color: #f9fafb;
+}
+
+body.dark-mode th {
+    background: #374151;
+    color: #ffffff;
+}
+
+body.dark-mode td {
+    border-color: #374151;
+}
+
+body.dark-mode .toolbar {
+    color: #f9fafb;
+}
+
+

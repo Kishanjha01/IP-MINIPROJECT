@@ -221,3 +221,21 @@ function exportCustomers() {
 
     URL.revokeObjectURL(url);
 }
+
+// Dark Mode functionality
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+
+    var isDark = document.body.classList.contains("dark-mode");
+
+    localStorage.setItem("crmTheme", isDark ? "dark" : "light");
+
+    document.getElementById("themeToggle").textContent =
+        isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+}
+
+// Restore the saved theme when the page opens
+if (localStorage.getItem("crmTheme") === "dark") {
+    document.body.classList.add("dark-mode");
+    document.getElementById("themeToggle").textContent = "☀️ Light Mode";
+}
