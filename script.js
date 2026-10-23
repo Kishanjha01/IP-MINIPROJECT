@@ -239,3 +239,11 @@ if (localStorage.getItem("crmTheme") === "dark") {
     document.body.classList.add("dark-mode");
     document.getElementById("themeToggle").textContent = "☀️ Light Mode";
 }
+
+// Clear Search functionality
+function clearSearch() {
+    document.getElementById("searchBox").value = "";
+    document.getElementById("statusFilter").value = "All";
+    showCustomers();
+}
+

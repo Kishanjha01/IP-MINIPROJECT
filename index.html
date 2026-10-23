@@ -67,12 +67,15 @@
     </div>
 
     <div class="toolbar">
-      <input
-        id="searchBox"
-        type="text"
-        placeholder="Search by name, email or company"
-        oninput="showCustomers()"
-      >
+      <button type="button" onclick="clearSearch()">Clear Search</button>
+    <input
+    id="searchBox"
+    type="text"
+    placeholder="Search by name, email or company"
+    oninput="showCustomers()"
+>
+
+<button type="button" onclick="clearSearch()">Clear Search</button>
 
       <select id="statusFilter" onchange="showCustomers()">
         <option value="All">All statuses</option>
